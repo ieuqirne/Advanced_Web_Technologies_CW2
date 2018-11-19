@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{{ wtf.quick_form(form) }}
+
 {% block content %}
 
 
@@ -12,7 +14,12 @@
           <p class="card-category">Complete your profile</p>
         </div>
         <div class="card-body">
-          {% if session['logged_in'] %}
+          <form method = "POST">
+            {{ form.hidden_tag() }}
+            {{ form.name.laberl }} {{ form.name() }}
+            {{ form.submit() }}            
+          </form>
+          <!-- {% if session['logged_in'] %}
           <p>You're logged in already!</p>
           {% else %}
           <form name="login_form" action="{{ url_for('do_admin_login') }}" method= "post">
@@ -33,6 +40,7 @@
             {% endif %}
             <div class="clearfix"></div>
           </form>
+          -->
         </div>
       </div>
     </div>
