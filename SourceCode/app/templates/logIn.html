@@ -22,6 +22,7 @@
           <form method = "POST">
             {{ form.hidden_tag() }}
             {{ form.name.label }} {{ form.name() }}
+            {{ form.password.label }} {{ form.password() }}
             {{ form.submit() }}
           </form>
           <!-- {% if session['logged_in'] %}
