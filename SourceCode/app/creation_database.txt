@@ -1,8 +1,0 @@
-venv/script/activate
-flask shell
-from app import db
-db.create_all
-from app import User,whiskys
-admin_role = User(id=1,username='Admin', password='admin', firstName='Enrique', lastName='Belenguer', type=1)
-db.session.add(admin_role)
-db.session.commit();
