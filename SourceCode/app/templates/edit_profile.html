@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Whiskypedia - Edit Profile{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>Edit Profile Of</h1>
+    <select class="form-control" name= users method="GET" action="/" onchange="location = this.options[this.selectedIndex].value;">
+      <option>Please select User</option>
+      {% for users in allUsers %}
+        <option value="/edit-profile/{{ users.id }}">
+          {{users.username}}
+        </option>
+      {% endfor %}
+    </select>
+</div>
+<div class="col-md-4">
+
+
+    {{ wtf.quick_form(form) }}
+</div>
+{% endblock %}
