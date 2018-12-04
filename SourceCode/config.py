@@ -10,10 +10,11 @@ class Config:
         ['true', 'on', '1']
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
-    FLASKY_MAIL_SUBJECT_PREFIX = '[Flasky]'
-    FLASKY_MAIL_SENDER = 'Flasky Admin <belenguercarrascoenrique@gmail.com>'
-    FLASKY_ADMIN = os.environ.get('FLASKY_ADMIN')
+    WEB_MAIL_SUBJECT_PREFIX = '[Flasky]'
+    WEB_MAIL_SENDER = 'Tweet Admin <belenguercarrascoenrique@gmail.com>'
+    WEB_ADMIN = os.environ.get('ADMIN')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    POSTS_PER_PAGE = 15
 
     @staticmethod
     def init_app(app):

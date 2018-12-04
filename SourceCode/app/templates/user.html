@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Whiskypedia - {{ user.username }}{% endblock %}
+{% block title %}Twitter - {{ user.username }}{% endblock %}
 
 {% block page_content %}
 <div class="page-header">
@@ -36,4 +36,6 @@
     </p>
   </div>
 </div>
+<h3>Posts by {{ user.username }}</h3>
+{% include 'templatePosts.html' %}
 {% endblock %}

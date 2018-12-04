@@ -1,10 +1,12 @@
 {% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
-{% block title %}Whiskypedia - Edit Profile{% endblock %}
+{% block title %}Twitter - Edit Profile{% endblock %}
 
 {% block page_content %}
+
 <div class="page-header">
+    {% if current_user.is_administrator() and allUsers %}
     <h1>Edit Profile Of</h1>
     <select class="form-control" name= users method="GET" action="/" onchange="location = this.options[this.selectedIndex].value;">
       <option>Please select User</option>
@@ -14,6 +16,9 @@
         </option>
       {% endfor %}
     </select>
+    {% else %}
+    <h1>Edit Your Profile</h1>
+    {% endif %}
 </div>
 <div class="col-md-4">
 

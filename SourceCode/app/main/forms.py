@@ -3,6 +3,8 @@ from ..models import Role, User
 from wtforms import StringField, TextAreaField, BooleanField, SelectField,SubmitField
 from wtforms import ValidationError
 from wtforms.validators import DataRequired, Length, Email, Regexp
+#Riching text
+from flask_pagedown.fields import PageDownField
 
 
 
@@ -11,10 +13,10 @@ class NameForm(FlaskForm):
     submit = SubmitField('Submit')
 
 class EditProfileForm(FlaskForm):
-    name = StringField('Real name', validators=[Length(0, 64)])
+    name = StringField('Real Name', validators=[Length(0, 64)])
     location = StringField('Location', validators=[Length(0, 64)])
     about_me = TextAreaField('About me')
-    submit = SubmitField('Submit')
+    submit = SubmitField('Update')
 
 class EditProfileAdminForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Length(1, 64),
@@ -26,10 +28,10 @@ class EditProfileAdminForm(FlaskForm):
                'underscores')])
     confirmed = BooleanField('Confirmed')
     role = SelectField('Role', coerce=int)
-    name = StringField('Real name', validators=[Length(0, 64)])
+    name = StringField('Real Name', validators=[Length(0, 64)])
     location = StringField('Location', validators=[Length(0, 64)])
     about_me = TextAreaField('About me')
-    submit = SubmitField('Submit')
+    submit = SubmitField('Update')
 
     def __init__(self, user, *args, **kwargs):
         super(EditProfileAdminForm, self).__init__(*args, **kwargs)
@@ -46,3 +48,8 @@ class EditProfileAdminForm(FlaskForm):
         if field.data != self.user.username and \
                 User.query.filter_by(username=field.data).first():
             raise ValidationError('Username already in use.')
+
+
+class PostForm(FlaskForm):
+    body = PageDownField("What's on your mind?", validators=[DataRequired()])
+    submit = SubmitField('Submit')

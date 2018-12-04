@@ -9,6 +9,9 @@ from flask_login import UserMixin,AnonymousUserMixin
 from . import db, login_manager
 #DateTime
 from datetime import datetime
+#Riching Text
+from markdown import markdown
+import bleach
 
 #Permission manager in the Role Model
 class Permission:
@@ -86,6 +89,7 @@ class User(UserMixin, db.Model):
     member_since = db.Column(db.DateTime(), default=datetime.utcnow)
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
     avatar_hash = db.Column(db.String(32))
+    posts = db.relationship('Post', backref='author', lazy='dynamic')
 
     #Defining a default role for Users
     def __init__(self, **kwargs):
@@ -138,6 +142,7 @@ class User(UserMixin, db.Model):
 
     #Adding avatar and gravatar URL generation with caching of md5 hashes
     #Also avoiding duplicates
+    #To change the avatar the users must change
     def gravatar_hash(self):
         return hashlib.md5(self.email.lower().encode('utf-8')).hexdigest()
 
@@ -153,6 +158,31 @@ class User(UserMixin, db.Model):
     def __repr__(self):
         return '<User %r>' % self.username
 
+#Posts
+class Post(db.Model):
+    __tablename__ = 'posts'
+    id = db.Column(db.Integer, primary_key=True)
+    body = db.Column(db.Text)
+    body_html = db.Column(db.Text)
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+#This is to to allow rich text into the database
+#The markDown function does and initial conversion to html
+#The celan() function removes any tags not on the whitelist
+#Linkify converst any URl into links
+    @staticmethod
+    def on_changed_body(target, value, oldvalue, initiator):
+        allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code',
+                        'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul',
+                        'h1', 'h2', 'h3', 'p']
+        target.body_html = bleach.linkify(bleach.clean(
+            markdown(value, output_format='html'),
+            tags=allowed_tags, strip=True))
+
+db.event.listen(Post.body, 'set', Post.on_changed_body)
+
+
+#Dealing with anonymous_user
 class AnonymousUser(AnonymousUserMixin):
     def can(self, permissions):
         return False
