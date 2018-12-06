@@ -14,8 +14,9 @@ class Config:
     WEB_MAIL_SENDER = 'Tweet Admin <belenguercarrascoenrique@gmail.com>'
     WEB_ADMIN = os.environ.get('ADMIN')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    POSTS_PER_PAGE = 15
-
+    POSTS_PER_PAGE = 10
+    FOLLOWERS_PER_PAGE = 20
+    MAX_NUMBER_OF_FOLLOWED = 10
     @staticmethod
     def init_app(app):
         pass

@@ -2,7 +2,7 @@
 {% import "bootstrap/wtf.html" as wtf %}
 {% import "macros.html" as macros %}
 
-{% block title %}Twitter{% endblock %}
+{% block title %}Blah{% endblock %}
 
 {% block page_content %}
 <div class="page-header">
@@ -20,7 +20,6 @@
     {% endif %}
 </div>
 {% include 'templatePosts.html' %}
-
 <!--Include the pagination on the bottom of the post, it can be modify in numbers in the config.py-->
 {% if pagination %}
 <div class="text-center">
@@ -28,7 +27,8 @@
 </div>
 {% endif %}
 {% endblock %}
-#The MarkDown preview is generated withe the help of the PageDown. That's why it has to be added to the template
+
+<!--The MarkDown preview is generated withe the help of the PageDown. That's why it has to be added to the template-->
 {% block scripts %}
 {{ super() }}
 {{ pagedown.include_pagedown() }}
