@@ -27,9 +27,15 @@
                 {% if current_user.is_authenticated %}
                 <li><a href="{{ url_for('main.trending') }}">Trending</a></li>
                 {% endif %}
-
             </ul>
             <ul class="nav navbar-nav navbar-right">
+              <form class="navbar-form navbar-left" method="get"
+                      action="{{ url_for('main.search') }}">
+                  <div class="form-group">
+                      {{ g.search_form.q(size=20, class='form-control',
+                          placeholder=g.search_form.q.label.text) }}
+                  </div>
+              </form>
                 {% if current_user.is_authenticated %}
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Account <b class="caret"></b></a>
@@ -58,7 +64,7 @@
         {{ message }}
     </div>
     {% endfor %}
-
+    {% block app_content %}{% endblock %}
     {% block page_content %}{% endblock %}
 </div>
 {% endblock %}

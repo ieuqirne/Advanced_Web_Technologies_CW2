@@ -6,7 +6,32 @@ from ..models import User,Role,Permission,Post,Follow
 from .forms import NameForm,EditProfileForm, EditProfileAdminForm,PostForm
 from flask_login import login_required, current_user
 from ..decorators import admin_required,permission_required
+from datetime import datetime
+#search
+from flask_babel import _, get_locale
+from flask import g
+from app.main.forms import SearchForm
+from app.search import add_to_index, remove_from_index, query_index
 
+@main.before_app_request
+def before_request():
+    current_user.last_seen = datetime.utcnow()
+    db.session.commit()
+    g.search_form = SearchForm()
+    g.locale = str(get_locale())
+
+@main.route('/search')
+def search():
+    if not g.search_form.validate():
+        return redirect(url_for('main.index'))
+    page = request.args.get('page', 1, type=int)
+    posts, total = Post.search(g.search_form.q.data, page,current_app.config['POSTS_PER_PAGE'])
+    next_url = url_for('main.search', q=g.search_form.q.data, page=page + 1)\
+        if total > page * current_app.config['POSTS_PER_PAGE'] else None
+    prev_url = url_for('main.search', q=g.search_form.q.data, page=page - 1) \
+        if page > 1 else None
+    return render_template('search.html', title=_('Search'), posts=posts,page=page,
+                           next_url=next_url, prev_url=prev_url)
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
@@ -30,6 +55,7 @@ def index():
     return render_template('index.html', form=form, posts=posts,
                            show_followed=show_followed, pagination=pagination)
 
+#Shows all the tweets
 @main.route('/trending/', methods=['GET', 'POST'])
 @login_required
 def trending():

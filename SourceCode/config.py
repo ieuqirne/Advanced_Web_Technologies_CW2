@@ -17,6 +17,9 @@ class Config:
     POSTS_PER_PAGE = 10
     FOLLOWERS_PER_PAGE = 20
     MAX_NUMBER_OF_FOLLOWED = 10
+    MAX_SEARCH_RESULTS = 50
+    LANGUAGES = ['en', 'es']
+    ELASTICSEARCH_URL = os.environ.get('ELASTICSEARCH_URL')
     @staticmethod
     def init_app(app):
         pass

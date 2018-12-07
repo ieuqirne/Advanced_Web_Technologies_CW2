@@ -5,7 +5,9 @@ from wtforms import ValidationError
 from wtforms.validators import DataRequired, Length, Email, Regexp
 #Riching text
 from flask_pagedown.fields import PageDownField
-
+#search
+from flask import request
+from flask_babel import _, lazy_gettext as _l
 
 
 class NameForm(FlaskForm):
@@ -53,3 +55,13 @@ class EditProfileAdminForm(FlaskForm):
 class PostForm(FlaskForm):
     body = PageDownField("What's on your mind?", validators=[DataRequired()])
     submit = SubmitField('Submit')
+
+class SearchForm(FlaskForm):
+    q = StringField(_l('Search'), validators=[DataRequired()])
+
+    def __init__(self, *args, **kwargs):
+        if 'formdata' not in kwargs:
+            kwargs['formdata'] = request.args
+        if 'csrf_enabled' not in kwargs:
+            kwargs['csrf_enabled'] = False
+        super(SearchForm, self).__init__(*args, **kwargs)
