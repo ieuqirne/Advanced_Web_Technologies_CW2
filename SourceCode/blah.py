@@ -4,7 +4,7 @@ from app import create_app, db
 from app.models import User, Role, Permission, Post, SearchableMixin
 
 
-app = create_app(os.getenv('BLAH_CONFIG') or 'default')
+app = create_app(os.getenv('FLASK_CONFIG') or 'default')
 migrate = Migrate(app, db)
 
 
