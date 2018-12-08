@@ -31,7 +31,7 @@ def login():
             login_user(user, form.remember_me.data)
             next = request.args.get('next')
             if next is None or not next.startswith('/'):
-                next = url_for('main.trending')
+                next = url_for('main.index')
             return redirect(next)
         flash('Invalid username or password.')
     return render_template('auth/login.html', form=form)
@@ -42,7 +42,7 @@ def login():
 def logout():
     logout_user()
     flash('You have been logged out.')
-    return redirect(url_for('main.trending'))
+    return redirect(url_for('main.index'))
 
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
@@ -70,7 +70,7 @@ def confirm(token):
         flash('You have confirmed your account. Thanks!')
     else:
         flash('The confirmation link is invalid or has expired.')
-    return redirect(url_for('main.trending'))
+    return redirect(url_for('main.index'))
 
 @auth.route('/confirm')
 @login_required
@@ -79,7 +79,7 @@ def resend_confirmation():
     send_email(current_user.email, 'Confirm Your Account',
                'auth/email/confirm', user=current_user, token=token)
     flash('A new confirmation email has been sent to you by email.')
-    return redirect(url_for('main.trending'))
+    return redirect(url_for('main.index'))
 
 
 @auth.route('/change-password', methods=['GET', 'POST'])
@@ -101,7 +101,7 @@ def change_password():
 @auth.route('/reset', methods=['GET', 'POST'])
 def password_reset_request():
     if not current_user.is_anonymous:
-        return redirect(url_for('main.trending'))
+        return redirect(url_for('main.index'))
     form = PasswordResetRequestForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
@@ -119,7 +119,7 @@ def password_reset_request():
 @auth.route('/reset/<token>', methods=['GET', 'POST'])
 def password_reset(token):
     if not current_user.is_anonymous:
-        return redirect(url_for('main.trending'))
+        return redirect(url_for('main.index'))
     form = PasswordResetForm()
     if form.validate_on_submit():
         if User.reset_password(token, form.password.data):

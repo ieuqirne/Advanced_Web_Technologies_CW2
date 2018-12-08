@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block app_content %}
-    <h1>{{ _('Search Results') }}{{ posts.count() }} Page {{ page}} </h1>
+    <h1>{{ _('Search Results') }} </h1>
     {% for post in posts %}
         {% include 'templatePost.html' %}
     {% endfor %}

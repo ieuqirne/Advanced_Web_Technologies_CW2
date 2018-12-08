@@ -34,18 +34,21 @@ def search():
                            next_url=next_url, prev_url=prev_url)
 
 @main.route('/', methods=['GET', 'POST'])
-@login_required
 def index():
     form = PostForm()
     if current_user.can(Permission.WRITE) and form.validate_on_submit():
-        post = Post(body=form.body.data, author=current_user._get_current_object())
+        post = Post(body=form.body.data,
+                    author=current_user._get_current_object())
         db.session.add(post)
         db.session.commit()
         return redirect(url_for('.index'))
     page = request.args.get('page', 1, type=int)
     show_followed = False
-    show_followed = bool(request.cookies.get('show_followed', ''))
-    query = current_user.followed_posts
+    if current_user.is_authenticated:
+        show_followed = bool(request.cookies.get('show_followed', ''))
+        query = current_user.followed_posts
+    else:
+        query = Post.query
     pagination = query.order_by(Post.timestamp.desc()).paginate(
         page, per_page=current_app.config['POSTS_PER_PAGE'],
         error_out=False)
@@ -55,6 +58,7 @@ def index():
 
 #Shows all the tweets
 @main.route('/trending/', methods=['GET', 'POST'])
+@login_required
 def trending():
     form = PostForm()
     if current_user.can(Permission.WRITE) and form.validate_on_submit():
@@ -65,12 +69,12 @@ def trending():
         return redirect(url_for('.index'))
     page = request.args.get('page', 1, type=int)
     query = Post.query
-    pagination = Post.query.order_by(Post.timestamp.desc()).paginate(
+    pagination = query.order_by(Post.timestamp.desc()).paginate(
         page, per_page=current_app.config['POSTS_PER_PAGE'],
         error_out=False)
     posts = pagination.items
-    return render_template('trending.html', form=form, posts=posts,
-                           pagination=pagination)
+    return render_template('trending.html', form=form, posts=posts, pagination=pagination)
+
 #Route and view function
 @main.route('/follow/<username>')
 @login_required
